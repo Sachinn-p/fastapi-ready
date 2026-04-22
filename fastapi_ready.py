@@ -8,11 +8,6 @@ from pathlib import Path
 
 TEMPLATE_ROOT = Path(__file__).resolve().parent
 INCLUDED_PATHS = [
-    ".gitignore",
-    ".python-version",
-    ".github",
-    "README.md",
-    "pyproject.toml",
     "main.py",
     "auth",
     "config",
@@ -22,6 +17,33 @@ INCLUDED_PATHS = [
     "router",
     "schemas",
 ]
+
+
+def create_env_example(target: Path) -> None:
+    """Create a .env.example file with all required environment variables."""
+    env_example_content = """# Database Configuration
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/fastapi_db
+
+# Security
+SECRET_KEY=your-secret-key-here-change-in-production
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+# Database
+SQL_ECHO=false
+"""
+    env_example_path = target / ".env.example"
+    with open(env_example_path, "w") as f:
+        f.write(env_example_content)
+
+
+def copy_readme(target: Path) -> None:
+    """Copy the generated project README template."""
+    source_readme = TEMPLATE_ROOT / "GENERATED_README.md"
+    target_readme = target / "README.md"
+    
+    if source_readme.is_file():
+        shutil.copy2(source_readme, target_readme)
 
 
 def create_project(target: Path) -> None:
@@ -39,6 +61,9 @@ def create_project(target: Path) -> None:
         elif source_path.is_file():
             destination_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source_path, destination_path)
+
+    create_env_example(target)
+    copy_readme(target)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
