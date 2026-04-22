@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Created project at: {target}")
     print("Next:")
     print(f"  cd {target}")
-    print("  uv sync")
+    print("  uv sync  # creates a local .venv; this is not copied from the template")
     print("  uvicorn main:app --reload")
     return 0
 

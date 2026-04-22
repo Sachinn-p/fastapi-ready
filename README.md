@@ -41,6 +41,7 @@ uvicorn main:app --reload
 ```
 
 The generated project includes only the app scaffold and template files. It does not copy virtualenvs, installed libraries, or build artifacts.
+After you run `uv sync`, a local `.venv/` folder will appear in the new project. That is expected and comes from the environment install step, not from the template copy.
 
 Usage pattern:
 
