@@ -4,20 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastapi-ready"
-version = "0.1.1"
+version = "0.1.2"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-	"fastapi>=0.115.0",
-	"uvicorn[standard]>=0.30.0",
-	"sqlalchemy>=2.0.0",
-	"asyncpg>=0.29.0",
+	"fastapi>=0.124.4",
+	"uvicorn[standard]>=0.33.0",
+	"sqlalchemy>=2.0.49",
+	"asyncpg>=0.30.0",
 	"passlib[bcrypt]>=1.7.4",
 	"bcrypt<5",
-	"python-jose[cryptography]>=3.3.0",
+	"python-jose[cryptography]>=3.4.0",
 	"python-dotenv>=1.0.1",
-	"email-validator>=2.2.0",
+	"email-validator>=2.3.0",
 ]
 
 [project.scripts]

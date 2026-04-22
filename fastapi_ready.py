@@ -57,7 +57,11 @@ def create_project(target: Path) -> None:
         destination_path = target / relative_path
 
         if source_path.is_dir():
-            shutil.copytree(source_path, destination_path)
+            shutil.copytree(
+                source_path,
+                destination_path,
+                ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "*.pyc"),
+            )
         elif source_path.is_file():
             destination_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source_path, destination_path)
