@@ -7,6 +7,7 @@ This repository is a reusable FastAPI backend template for a freelancing platfor
 - JWT authentication for users
 - A `fastapi-ready` CLI to scaffold new projects from this template
 - GitHub Actions workflows for CI and PyPI publishing with OIDC trusted publishing
+- Python 3.8 support for local development, CI, and packaging
 
 ## Quick Start
 
@@ -30,14 +31,22 @@ uvicorn main:app --reload
 
 ## Create a New Project
 
-After installing this package, generate a fresh project from the template:
+After installing this package, generate a fresh clean project from the template:
 
 ```bash
-fastapi-ready my-new-app
-cd my-new-app
+fastapi-ready directory_name
+cd directory_name
 uv sync
 uvicorn main:app --reload
 ```
+
+The generated project includes only the app scaffold and template files. It does not copy virtualenvs, installed libraries, or build artifacts.
+
+Usage pattern:
+
+- `fastapi-ready my-new-app` creates a new folder in the current directory
+- `fastapi-ready /absolute/path/to/my-new-app` creates the project at that path
+- `fastapi-ready .` is not supported because the current directory already exists
 
 ## Environment Variables
 
@@ -73,3 +82,7 @@ The publishing workflow lives at `.github/workflows/workflow.yml`.
 
 - `.github/workflows/ci.yml` - test workflow
 - `.github/workflows/workflow.yml` - PyPI publish workflow
+
+## Versioning
+
+Release versions are published from `pyproject.toml`. Bump the version before each PyPI release to avoid file reuse errors.

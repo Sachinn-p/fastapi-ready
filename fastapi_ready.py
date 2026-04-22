@@ -7,16 +7,21 @@ from pathlib import Path
 
 
 TEMPLATE_ROOT = Path(__file__).resolve().parent
-IGNORED_DIRS = {".git", ".venv", "__pycache__", "backend.egg-info"}
-IGNORED_FILES = {"uv.lock"}
-
-
-def _ignore_patterns(_: str, names: list[str]) -> set[str]:
-    ignored: set[str] = set()
-    for name in names:
-        if name in IGNORED_DIRS or name in IGNORED_FILES or name.endswith(".pyc"):
-            ignored.add(name)
-    return ignored
+INCLUDED_PATHS = [
+    ".gitignore",
+    ".python-version",
+    ".github",
+    "README.md",
+    "pyproject.toml",
+    "main.py",
+    "auth",
+    "config",
+    "core",
+    "db",
+    "models",
+    "router",
+    "schemas",
+]
 
 
 def create_project(target: Path) -> None:
@@ -24,22 +29,30 @@ def create_project(target: Path) -> None:
         raise FileExistsError(f"Target already exists: {target}")
 
     target.mkdir(parents=True, exist_ok=False)
-    shutil.copytree(
-        TEMPLATE_ROOT,
-        target,
-        dirs_exist_ok=True,
-        ignore=_ignore_patterns,
-    )
+
+    for relative_path in INCLUDED_PATHS:
+        source_path = TEMPLATE_ROOT / relative_path
+        destination_path = target / relative_path
+
+        if source_path.is_dir():
+            shutil.copytree(source_path, destination_path)
+        elif source_path.is_file():
+            destination_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_path, destination_path)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(prog="fastapi-ready", description="Create a new FastAPI backend from this template.")
-    parser.add_argument("name", help="Project name or target path")
+    parser = argparse.ArgumentParser(prog="fastapi-ready", description="Create a new clean FastAPI backend scaffold from this template.")
+    parser.add_argument("name", help="New directory name or absolute target path")
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
+    if args.name == ".":
+        print("Use a new directory name or an absolute path. '.' is the current directory and cannot be used.", file=sys.stderr)
+        return 1
+
     raw_target = Path(args.name).expanduser()
     target = raw_target if raw_target.is_absolute() else Path.cwd() / raw_target
 
